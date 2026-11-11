@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWE FASHION - Look Good, Feel Confident</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            light: '#f3e5ab',
+                            DEFAULT: '#d4af37',
+                            dark: '#aa7c11',
+                            champagne: '#e6ca65'
+                        },
+                        brand: {
+                            black: '#0d0d0d',
+                            gray: '#1f1f1f',
+                            lightgray: '#f5f5f7'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0d0d0d;
+            color: #f5f5f7;
+        }
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0d0d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
+        }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fff2cb 0%, #d4af37 50%, #aa7c11 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border {
+            border-color: #d4af37;
+        }
+        .toast-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .toast-enter-active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased bg-black text-gray-100 flex flex-col min-h-screen">
+
+    <!-- BASE64 IMAGES DATA -->
+    <script>
+        // Logo & Owner image base64 placeholder handlers
+       const LOGO_BASE64 = "WhatsApp Image 2026-11-11 at 21.45.50.jpeg";
+        const OWNER_BASE64 = "3f4942d2-fc78-4899-8374-60ac5b3d852b.jpeg";
+    </script>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-neutral-800 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="h-12 w-auto overflow-hidden rounded">
+                        <img id="nav-logo" src="" alt="MWE FASHION Logo" class="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
+                    </div>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
+                    <a href="#home" class="hover:text-amber-400 transition-colors">Beranda</a>
+                    <a href="#katalog" class="hover:text-amber-400 transition-colors">Produk</a>
+                    <a href="#tentang" class="hover:text-amber-400 transition-colors">Tentang Kami</a>
+                    <a href="#kontak" class="hover:text-amber-400 transition-colors">Kontak</a>
+                </div>
+
+                <!-- Right Action Icons & Search -->
+                <div class="flex items-center gap-4">
+                    <!-- Search Bar input -->
+                    <div class="relative hidden sm:block w-48 lg:w-64">
+                        <input type="text" id="navSearchInput" placeholder="Cari fashion..." class="w-full bg-neutral-900 border border-neutral-700 rounded-full py-1.5 pl-9 pr-4 text-xs text-white focus:outline-none focus:border-amber-400 transition-all">
+                        <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+
+                    <!-- Cart Icon Button -->
+                    <button id="cartBtn" onclick="toggleCart()" class="relative p-2 text-neutral-300 hover:text-amber-400 transition-colors focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        <span id="cartCountBadge" class="absolute -top-1 -right-1 bg-amber-500 text-black font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-neutral-300 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-neutral-900 border-b border-neutral-800 px-4 pt-2 pb-6 space-y-3 text-sm">
+            <input type="text" id="mobileSearchInput" placeholder="Cari fashion wanita..." class="w-full bg-neutral-800 border border-neutral-700 rounded-lg py-2 px-3 text-xs text-white mb-3">
+            <a href="#home" onclick="toggleMobileMenu()" class="block py-2 text-neutral-300 hover:text-amber-400">Beranda</a>
+            <a href="#katalog" onclick="toggleMobileMenu()" class="block py-2 text-neutral-300 hover:text-amber-400">Produk</a>
+            <a href="#tentang" onclick="toggleMobileMenu()" class="block py-2 text-neutral-300 hover:text-amber-400">Tentang Kami</a>
+            <a href="#kontak" onclick="toggleMobileMenu()" class="block py-2 text-neutral-300 hover:text-amber-400">Kontak</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="relative min-h-[85vh] flex items-center justify-center bg-neutral-950 overflow-hidden border-b border-neutral-900">
+        <div class="absolute inset-0 z-0 opacity-40">
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" alt="Fashion Cover" class="w-full h-full object-cover object-center filter grayscale contrast-125">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 max-w-4xl mx-auto text-center px-4 py-20">
+            <span class="inline-block px-4 py-1.5 mb-6 text-xs uppercase tracking-[0.3em] font-medium border border-amber-400/50 text-amber-300 bg-amber-400/10 rounded-full">High fashion collection</span>
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-playfair font-bold tracking-tight text-white mb-4">
+                MWE FASHION
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl font-playfair italic gold-gradient-text mb-6">
+                "Look Good, Feel Confident."
+            </p>
+            <p class="text-neutral-300 max-w-2xl mx-auto text-sm sm:text-base font-light leading-relaxed mb-8">
+                Tampil lebih elegan dan percaya diri dengan koleksi fashion wanita terbaik. Siluet modern, material premium, dan potongan presisi untuk setiap momen istimewa Anda.
+            </p>
+            <a href="#katalog" class="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-black font-semibold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-all transform hover:-translate-y-0.5 shadow-lg shadow-amber-400/20">
+                BELANJA SEKARANG
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- MAIN CATALOG SECTION -->
+    <section id="katalog" class="py-16 bg-black min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Header Catalog -->
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-3xl sm:text-4xl font-playfair font-bold text-white mb-3">Koleksi Eksklusif</h2>
+                <div class="w-16 h-0.5 bg-amber-400 mx-auto mb-4"></div>
+                <p class="text-neutral-400 text-sm">Pilih dari rangkaian busana wanita modern yang dirancang khusus untuk kenyamanan dan keanggunan.</p>
+            </div>
+
+            <!-- Category & Sort Controls -->
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-6 mb-10 pb-6 border-b border-neutral-800">
+                
+                <!-- Category Badges -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2 text-xs font-medium" id="categoryContainer">
+                    <button onclick="setCategory('all')" class="cat-btn active px-4 py-2 rounded-full border border-amber-400 bg-amber-400 text-black transition-all">Semua Produk</button>
+                    <button onclick="setCategory('gaun')" class="cat-btn px-4 py-2 rounded-full border border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-amber-400 hover:text-amber-400 transition-all">Gaun</button>
+                    <button onclick="setCategory('setelan')" class="cat-btn px-4 py-2 rounded-full border border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-amber-400 hover:text-amber-400 transition-all">Setelan Jas</button>
+                    <button onclick="setCategory('blazer')" class="cat-btn px-4 py-2 rounded-full border border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-amber-400 hover:text-amber-400 transition-all">Blazer</button>
+                    <button onclick="setCategory('blouse')" class="cat-btn px-4 py-2 rounded-full border border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-amber-400 hover:text-amber-400 transition-all">Blouse</button>
+                    <button onclick="setCategory('dress')" class="cat-btn px-4 py-2 rounded-full border border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-amber-400 hover:text-amber-400 transition-all">Dress</button>
+                    <button onclick="setCategory('rok')" class="cat-btn px-4 py-2 rounded-full border border-neutral-800 bg-neutral-900 text-neutral-300 hover:border-amber-400 hover:text-amber-400 transition-all">Rok</button>
+                </div>
+
+                <!-- Sorting Dropdown -->
+                <div class="flex items-center gap-3 text-xs w-full lg:w-auto justify-end">
+                    <span class="text-neutral-400">Urutkan:</span>
+                    <select id="sortSelect" onchange="renderProducts()" class="bg-neutral-900 border border-neutral-700 text-neutral-200 rounded-lg px-3 py-2 focus:outline-none focus:border-amber-400 cursor-pointer">
+                        <option value="default">Terbaru</option>
+                        <option value="price-low">Harga Terendah</option>
+                        <option value="price-high">Harga Tertinggi</option>
+                        <option value="name-az">Nama A–Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+                <!-- Javascript will populate products here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyCatalog" class="hidden text-center py-20 text-neutral-500">
+                <svg class="w-16 h-16 mx-auto mb-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <p class="text-lg">Tidak ada produk yang cocok dengan kriteria pencarian Anda.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ABOUT US SECTION -->
+    <section id="tentang" class="py-20 bg-neutral-950 border-t border-b border-neutral-900 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Owner Image -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-600 opacity-30 group-hover:opacity-60 transition duration-500 blur"></div>
+                        <div class="relative w-72 sm:w-80 h-96 rounded-2xl overflow-hidden bg-neutral-900 border border-neutral-800 shadow-2xl">
+                            <img id="owner-img" src="" alt="Nursafa Marwah - Owner MWE FASHION" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <span class="text-amber-400 font-semibold tracking-widest text-xs uppercase">Profil Pendiri</span>
+                    <h2 class="text-3xl sm:text-4xl font-playfair font-bold text-white">Nursafa Marwah</h2>
+                    <p class="text-amber-300 font-medium text-sm">Owner / Pengelola MWE FASHION</p>
+
+                    <blockquote class="italic text-xl font-playfair text-neutral-200 border-l-0 lg:border-l-2 border-amber-400 lg:pl-4 my-4">
+                        "Fashion sederhana, percaya diri tanpa batas."
+                    </blockquote>
+
+                    <p class="text-neutral-400 leading-relaxed text-sm">
+                        MWE FASHION hadir sebagai pilihan fashion wanita dengan gaya modern, elegan, dan minimalis. Kami percaya bahwa setiap wanita dapat tampil percaya diri melalui pilihan pakaian yang nyaman, anggun, dan sesuai dengan kepribadiannya.
+                    </p>
+
+                    <!-- Credentials Badges -->
+                    <div class="pt-4 flex flex-wrap justify-center lg:justify-start gap-4 text-xs font-medium text-neutral-300">
+                        <div class="bg-neutral-900 border border-neutral-800 px-4 py-2.5 rounded-xl flex items-center gap-2">
+                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path></svg>
+                            <span>Kelas XII Kesehatan</span>
+                        </div>
+                        <div class="bg-neutral-900 border border-neutral-800 px-4 py-2.5 rounded-xl flex items-center gap-2">
+                            <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                            <span>Jakarta, Indonesia</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="kontak" class="py-20 bg-black">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-playfair font-bold text-white mb-4">Hubungi Kami</h2>
+            <p class="text-neutral-400 text-sm mb-8">Punya pertanyaan seputar ukuran, bahan, atau pesanan khusus? Tim layanan pelanggan kami siap membantu Anda.</p>
+
+            <div class="bg-neutral-950 border border-neutral-800 rounded-2xl p-8 shadow-xl max-w-xl mx-auto">
+                <div class="w-16 h-16 bg-amber-400/10 border border-amber-400/30 rounded-full flex items-center justify-center mx-auto mb-4 text-amber-400">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-2">WhatsApp Official</h3>
+                <p class="text-neutral-400 text-xs mb-6">+62 851-9151-7455</p>
+                
+                <a href="https://wa.me/6285191517455" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm px-6 py-3 rounded-xl transition-colors shadow-lg shadow-emerald-900/30">
+                    <span>Chat Sekarang via WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-neutral-950 text-neutral-400 border-t border-neutral-900 pt-16 pb-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-neutral-900">
+                
+                <!-- Brand info -->
+                <div class="space-y-4 md:col-span-1">
+                    <img id="footer-logo" src="" alt="MWE FASHION Logo" class="h-10 w-auto object-contain">
+                    <p class="text-xs italic text-amber-400">Look Good, Feel Confident.</p>
+                    <p class="text-xs leading-relaxed text-neutral-500">Brand fashion wanita modern yang menghadirkan pakaian berkualitas tinggi, anggun, dan elegan.</p>
+                </div>
+
+                <!-- Navigasi Cepat -->
+                <div>
+                    <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">Navigasi</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><a href="#home" class="hover:text-amber-400 transition-colors">Beranda</a></li>
+                        <li><a href="#katalog" class="hover:text-amber-400 transition-colors">Katalog Produk</a></li>
+                        <li><a href="#tentang" class="hover:text-amber-400 transition-colors">Tentang Kami</a></li>
+                        <li><a href="#kontak" class="hover:text-amber-400 transition-colors">Kontak</a></li>
+                    </ul>
+                </div>
+
+                <!-- Informasi kontak -->
+                <div>
+                    <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">Kontak Kami</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li>WhatsApp: +62 851-9151-7455</li>
+                        <li>Lokasi: Jakarta, Indonesia</li>
+                        <li>Jam Operasional: 09.00 - 21.00 WIB</li>
+                    </ul>
+                </div>
+
+                <!-- Pemilik -->
+                <div>
+                    <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">Pengelola</h4>
+                    <p class="text-xs font-semibold text-white">Nursafa Marwah</p>
+                    <p class="text-xs text-neutral-500 mb-1">Owner / Pengelola MWE FASHION</p>
+                    <p class="text-xs text-neutral-500">Kelas XII Kesehatan</p>
+                </div>
+            </div>
+
+            <div class="pt-8 text-center text-xs text-neutral-600">
+                <p>&copy; 2026 MWE FASHION. All Rights Reserved. Designed for Tugas Sekolah.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART SLIDE-OVER PANEL -->
+    <div id="cartModal" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
+
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-neutral-900 text-white shadow-2xl flex flex-col border-l border-neutral-800">
+                
+                <!-- Panel Header -->
+                <div class="p-6 bg-neutral-950 border-b border-neutral-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        <h2 class="text-lg font-playfair font-semibold">Keranjang Belanja</h2>
+                    </div>
+                    <button onclick="toggleCart()" class="text-neutral-400 hover:text-white p-1">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Cart Items List -->
+                <div class="flex-1 overflow-y-auto p-6 space-y-4" id="cartItemsContainer">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Panel Footer / Checkout Form -->
+                <div class="p-6 bg-neutral-950 border-t border-neutral-800 space-y-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-neutral-400">Total Pembayaran:</span>
+                        <span id="cartTotalPrice" class="font-bold text-amber-400 text-base">Rp 0</span>
+                    </div>
+
+                    <!-- Checkout Form Toggle Button -->
+                    <button id="btnProceedCheckout" onclick="showCheckoutForm()" class="w-full bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs uppercase tracking-widest py-3.5 rounded-xl transition-all">
+                        Lanjut ke Pemesanan
+                    </button>
+
+                    <!-- Hidden Form Area -->
+                    <div id="checkoutForm" class="hidden space-y-3 pt-3 border-t border-neutral-800">
+                        <h3 class="text-xs uppercase font-semibold text-amber-400">Data Pengiriman</h3>
+                        <input type="text" id="custName" placeholder="Nama Lengkap *" class="w-full bg-neutral-900 border border-neutral-700 rounded-lg p-2.5 text-xs text-white focus:border-amber-400 focus:outline-none">
+                        <textarea id="custAddress" rows="2" placeholder="Alamat Pengiriman Lengkap *" class="w-full bg-neutral-900 border border-neutral-700 rounded-lg p-2.5 text-xs text-white focus:border-amber-400 focus:outline-none"></textarea>
+                        <input type="text" id="custNotes" placeholder="Catatan Tambahan (Opsional)" class="w-full bg-neutral-900 border border-neutral-700 rounded-lg p-2.5 text-xs text-white focus:border-amber-400 focus:outline-none">
+                        
+                        <div class="flex gap-2 pt-2">
+                            <button onclick="hideCheckoutForm()" class="w-1/3 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs py-2.5 rounded-lg">Batal</button>
+                            <button onclick="processWhatsAppCheckout()" class="w-2/3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs py-2.5 rounded-lg flex items-center justify-center gap-1">
+                                <span>Kirim via WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-neutral-900 border border-amber-400/40 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toastMsg" class="text-xs font-medium">Produk ditambahkan ke keranjang</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Set image source data base64 directly on load
+        document.getElementById('nav-logo').src = LOGO_BASE64;
+        document.getElementById('footer-logo').src = LOGO_BASE64;
+        document.getElementById('owner-img').src = OWNER_BASE64;
+
+        // CATALOG DATA (Minimal 18 Products)
+        const products = [
+            // GAUN WANITA
+            {
+                id: 1,
+                name: "Elegant Evening Dress",
+                category: "gaun",
+                price: 489000,
+                image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=800&auto=format&fit=crop",
+                desc: "Gaun malam hitam bermaterial satin premium dengan siluet anggun."
+            },
+            {
+                id: 2,
+                name: "Aurora Long Dress",
+                category: "gaun",
+                price: 529000,
+                image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop",
+                desc: "Gaun panjang warna krem champagne dengan detail lipit halus."
+            },
+            {
+                id: 3,
+                name: "Classic Midi Dress",
+                category: "gaun",
+                price: 399000,
+                image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop",
+                desc: "Midi dress potongan A-line minimalis bernuansa monokrom."
+            },
+            {
+                id: 4,
+                name: "Velvet Party Dress",
+                category: "gaun",
+                price: 559000,
+                image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=800&auto=format&fit=crop",
+                desc: "Gaun pesta berbahan velvet mewah dengan kerah v-neck elegan."
+            },
+
+            // SETELAN JAS WANITA
+            {
+                id: 5,
+                name: "Classic Women's Suit",
+                category: "setelan",
+                price: 689000,
+                image: "https://images.unsplash.com/photo-1548624149-f1af3492b83a?q=80&w=800&auto=format&fit=crop",
+                desc: "Setelan jas formal wanita potongan bespoke berwarna hitam tajam."
+            },
+            {
+                id: 6,
+                name: "Premium Blazer Set",
+                category: "setelan",
+                price: 749000,
+                image: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800&auto=format&fit=crop",
+                desc: "Setelan blazer & celana bahan wool blend warna abu-abu modern."
+            },
+            {
+                id: 7,
+                name: "Modern Formal Suit",
+                category: "setelan",
+                price: 699000,
+                image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=800&auto=format&fit=crop",
+                desc: "Setelan jas profesional wanita bernuansa krem champagne."
+            },
+            {
+                id: 8,
+                name: "Elegant Office Set",
+                category: "setelan",
+                price: 649000,
+                image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop",
+                desc: "Setelan kerja wanita dengan perpaduan blazer fitted dan celana slim."
+            },
+
+            // BLAZER WANITA
+            {
+                id: 9,
+                name: "Black Elegant Blazer",
+                category: "blazer",
+                price: 429000,
+                image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop",
+                desc: "Blazer hitam terstruktur dengan kancing emas beraksen mewah."
+            },
+            {
+                id: 10,
+                name: "Cream Premium Blazer",
+                category: "blazer",
+                price: 449000,
+                image: "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?q=80&w=800&auto=format&fit=crop",
+                desc: "Blazer krem berbahan cotton linen premium yang adem dan rapi."
+            },
+            {
+                id: 11,
+                name: "Modern Oversized Blazer",
+                category: "blazer",
+                price: 419000,
+                image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=800&auto=format&fit=crop",
+                desc: "Blazer potongan oversized santai namun tetap memberi kesan chic."
+            },
+
+            // BLOUSE WANITA
+            {
+                id: 12,
+                name: "Romantic White Blouse",
+                category: "blouse",
+                price: 289000,
+                image: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?q=80&w=800&auto=format&fit=crop",
+                desc: "Blouse putih berbahan sifon halus dengan kerah pita feminin."
+            },
+            {
+                id: 13,
+                name: "Elegant Puff Sleeve Blouse",
+                category: "blouse",
+                price: 299000,
+                image: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?q=80&w=800&auto=format&fit=crop",
+                desc: "Blouse lengan balon dengan potongan tubuh fitted yang anggun."
+            },
+            {
+                id: 14,
+                name: "Classic Office Blouse",
+                category: "blouse",
+                price: 279000,
+                image: "https://images.unsplash.com/photo-1551803091-e20673f15770?q=80&w=800&auto=format&fit=crop",
+                desc: "Blouse kerja minimalis abu-abu terang dengan kancing tersembunyi."
+            },
+
+            // DRESS & SETELAN WANITA
+            {
+                id: 15,
+                name: "Minimalist Casual Dress",
+                category: "dress",
+                price: 349000,
+                image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800&auto=format&fit=crop",
+                desc: "Dress kasual santai potongan lurus bernuansa hitam elegan."
+            },
+            {
+                id: 16,
+                name: "Elegant Two Piece Set",
+                category: "dress",
+                price: 499000,
+                image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=800&auto=format&fit=crop",
+                desc: "Setelan dua potong atasan crop dan rok panjang warna senada."
+            },
+            {
+                id: 17,
+                name: "Luxury Matching Set",
+                category: "dress",
+                price: 539000,
+                image: "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=800&auto=format&fit=crop",
+                desc: "Setelan knitwear premium eksklusif untuk gaya musim dingin/AC."
+            },
+
+            // ROK WANITA
+            {
+                id: 18,
+                name: "Classic Long Skirt",
+                category: "rok",
+                price: 319000,
+                image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=800&auto=format&fit=crop",
+                desc: "Rok panjang hitam polos potongan A-line yang flowy."
+            },
+            {
+                id: 19,
+                name: "Elegant Pleated Skirt",
+                category: "rok",
+                price: 339000,
+                image: "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?q=80&w=800&auto=format&fit=crop",
+                desc: "Rok plisket bernuansa emas champagne dengan pantulan kilau halus."
+            }
+        ];
+
+        // APP STATE
+        let cart = [];
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        // FORMAT CURRENCY
+        function formatIDR(amount) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
+        }
+
+        // RENDER PRODUCTS
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const emptyState = document.getElementById('emptyCatalog');
+            const sortVal = document.getElementById('sortSelect').value;
+
+            // Filter
+            let filtered = products.filter(p => {
+                const matchCat = (currentCategory === 'all') || (p.category === currentCategory);
+                const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.desc.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchCat && matchSearch;
+            });
+
+            // Sort
+            if (sortVal === 'price-low') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sortVal === 'price-high') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (sortVal === 'name-az') {
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+            }
+
+            // UI Render
+            grid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                filtered.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = "group bg-neutral-950 border border-neutral-900 rounded-2xl overflow-hidden hover:border-amber-400/40 transition-all duration-300 flex flex-col justify-between";
+                    card.innerHTML = `
+                        <div>
+                            <div class="relative overflow-hidden aspect-[3/4]">
+                                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <span class="absolute top-3 left-3 bg-black/70 backdrop-blur-md border border-neutral-700 text-neutral-300 text-[10px] uppercase font-semibold px-2.5 py-1 rounded-full">
+                                    ${product.category}
+                                </span>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="text-base font-semibold text-white font-playfair group-hover:text-amber-300 transition-colors">${product.name}</h3>
+                                <p class="text-neutral-400 text-xs mt-1.5 line-clamp-2 leading-relaxed">${product.desc}</p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between mt-auto">
+                            <span class="text-amber-400 font-bold text-sm sm:text-base">${formatIDR(product.price)}</span>
+                            <button onclick="addToCart(${product.id})" class="bg-neutral-900 hover:bg-amber-400 hover:text-black text-amber-400 border border-amber-400/30 p-2.5 rounded-xl transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        // CATEGORY FILTER SETTER
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-400', 'text-black', 'border-amber-400');
+                btn.classList.add('bg-neutral-900', 'text-neutral-300', 'border-neutral-800');
+            });
+            event.target.classList.remove('bg-neutral-900', 'text-neutral-300', 'border-neutral-800');
+            event.target.classList.add('bg-amber-400', 'text-black', 'border-amber-400');
+            renderProducts();
+        }
+
+        // CART FUNCTIONS
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existItem = cart.find(item => item.id === productId);
+
+            if (existItem) {
+                existItem.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            updateCartUI();
+            showToast(`"${product.name}" ditambahkan ke keranjang.`);
+        }
+
+        function updateCartQty(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (!item) return;
+
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.id !== productId);
+            }
+            updateCartUI();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(i => i.id !== productId);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItemsContainer');
+            const badge = document.getElementById('cartCountBadge');
+            const totalElem = document.getElementById('cartTotalPrice');
+
+            const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            // Badge Update
+            badge.innerText = totalCount;
+            if (totalCount > 0) {
+                badge.classList.remove('scale-0');
+            } else {
+                badge.classList.add('scale-0');
+            }
+
+            // Cart Items HTML
+            container.innerHTML = '';
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-neutral-500">
+                        <svg class="w-12 h-12 mx-auto mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                        <p class="text-sm">Keranjang Anda masih kosong.</p>
+                    </div>
+                `;
+            } else {
+                cart.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = "flex gap-4 bg-neutral-950 p-3.5 rounded-xl border border-neutral-800 items-center";
+                    div.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-20 object-cover rounded-lg bg-neutral-900">
+                        <div class="flex-1">
+                            <h4 class="text-xs font-semibold text-white line-clamp-1">${item.name}</h4>
+                            <p class="text-amber-400 text-xs font-bold mt-1">${formatIDR(item.price)}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateCartQty(${item.id}, -1)" class="w-6 h-6 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 flex items-center justify-center text-xs">-</button>
+                                <span class="text-xs font-medium w-4 text-center">${item.qty}</span>
+                                <button onclick="updateCartQty(${item.id}, 1)" class="w-6 h-6 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 flex items-center justify-center text-xs">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-neutral-500 hover:text-red-400 p-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            totalElem.innerText = formatIDR(totalPrice);
+        }
+
+        // TOGGLE CART MODAL
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // CHECKOUT FORM HANDLERS
+        function showCheckoutForm() {
+            if (cart.length === 0) {
+                showToast("Keranjang belanja masih kosong!");
+                return;
+            }
+            document.getElementById('checkoutForm').classList.remove('hidden');
+            document.getElementById('btnProceedCheckout').classList.add('hidden');
+        }
+
+        function hideCheckoutForm() {
+            document.getElementById('checkoutForm').classList.add('hidden');
+            document.getElementById('btnProceedCheckout').classList.remove('hidden');
+        }
+
+        function processWhatsAppCheckout() {
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const notes = document.getElementById('custNotes').value.trim();
+
+            if (!name || !address) {
+                alert("Harap isi Nama Lengkap dan Alamat Pengiriman Anda!");
+                return;
+            }
+
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            let message = `*PESANAN BARU - MWE FASHION*\n`;
+            message += `----------------------------------\n`;
+            message += `*Nama:* ${name}\n`;
+            message += `*Alamat Pengiriman:* ${address}\n`;
+            if (notes) message += `*Catatan:* ${notes}\n`;
+            message += `----------------------------------\n`;
+            message += `*DAFTAR PESANAN:*\n`;
+
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.name} (${item.qty}x) - ${formatIDR(item.price * item.qty)}\n`;
+            });
+
+            message += `----------------------------------\n`;
+            message += `*TOTAL PEMBAYARAN:* ${formatIDR(totalPrice)}\n\n`;
+            message += `Mohon konfirmasi ketersediaan stok dan instruksi pembayaran. Terima kasih!`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const waUrl = `https://wa.me/6285191517455?text=${encodedMessage}`;
+
+            window.open(waUrl, '_blank');
+        }
+
+        // TOAST NOTIFICATION
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+
+            toastMsg.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // MOBILE MENU
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // EVENT LISTENERS FOR SEARCH
+        document.getElementById('navSearchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderProducts();
+        });
+
+        document.getElementById('mobileSearchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderProducts();
+        });
+
+        // INIT RENDER
+        renderProducts();
+        updateCartUI();
+    </script>
+</body>
+</html>
